@@ -1,18 +1,18 @@
 # Sudoku
 
 
-How to Build
+*How to Build*
 ```
   gcc sudoku.c -o run
 ```
 
-Usage: 
+*Usage: *
 ```
 ./run
 ```   
   then input a string of length 81 to init a sudoku table, use '.' instead of unkown cells.
    
-Example:
+*Example:*
 ```
 #./run
 
