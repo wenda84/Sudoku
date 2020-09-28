@@ -13,15 +13,15 @@
 #define     UNIT_STATUS_CALCING     1
 #define     UNIT_STATUS_CONFIRMED   2
 
-#define     MAP_STATUS_INIT             0       /* ³õÊ¼»¯ */
-#define     MAP_STATUS_UNIT_CALCING     1       /* ÕıÔÚÖğ¸ö¼ÆËãÎ´Öªµ¥ÔªµÄÊıÖµ */
-#define     MAP_STATUS_UNIT_RECALING    2       /* ËùÓĞµ¥ÔªÊıÖµÊ×´Î¼ÆËãÍê±Ïºó,¿ÉÄÜÓĞÎŞ·¨µ¥¶ÀÈ·¶¨µÄÖµ,ÔÚ½øĞĞ¼ÆËã */
+#define     MAP_STATUS_INIT             0       /* åˆå§‹åŒ– */
+#define     MAP_STATUS_UNIT_CALCING     1       /* æ­£åœ¨é€ä¸ªè®¡ç®—æœªçŸ¥å•å…ƒçš„æ•°å€¼ */
+#define     MAP_STATUS_UNIT_RECALING    2       /* æ‰€æœ‰å•å…ƒæ•°å€¼é¦–æ¬¡è®¡ç®—å®Œæ¯•å,å¯èƒ½æœ‰æ— æ³•å•ç‹¬ç¡®å®šçš„å€¼,åœ¨è¿›è¡Œè®¡ç®— */
 #define     MAP_STATUS_GUESSING         3 
 #define     MAP_STATUS_ALL_FINISH       4
 
 #define     PROC_SUCCSS                 0
-#define     PROC_FAIL_COMM              1       /* ´¦ÀíÊ§°Ü: Í¨ÓÃ´íÎó */
-#define     PROC_FAIL_NO_VALUE          2       /* ´¦ÀíÊ§°Ü: ÎŞÓĞĞ§Öµ */
+#define     PROC_FAIL_COMM              1       /* å¤„ç†å¤±è´¥: é€šç”¨é”™è¯¯ */
+#define     PROC_FAIL_NO_VALUE          2       /* å¤„ç†å¤±è´¥: æ— æœ‰æ•ˆå€¼ */
 
 #define     PRINT_LINE                                           \
                 do                                               \
@@ -68,11 +68,11 @@ typedef struct tagT_unit_values_list
 
 typedef struct tagT_unit
 {
-    BYTE                bValue;                     /* ×îÖÕÈ·ÈÏµÄÖµ                        */
-    BYTE                bUnitSatus;                 /* ×´Ì¬ -- 0:³õÊ¼»¯, 1:ÕıÔÚ¼ÆËã 2:È·ÈÏ */
+    BYTE                bValue;                     /* æœ€ç»ˆç¡®è®¤çš„å€¼                        */
+    BYTE                bUnitSatus;                 /* çŠ¶æ€ -- 0:åˆå§‹åŒ–, 1:æ­£åœ¨è®¡ç®— 2:ç¡®è®¤ */
     
-    T_unit_values_list  tMaybeValueList;            /* ¼ÇÂ¼¿ÉÄÜµÄÊıÖµ, Ó¦ÔÚunit×´Ì¬Îª1Ê±ÓĞĞ§ */
-    BYTE                bInitFlag;                  /* ÊÇ·ñÊÇÔ¤ÉèÊıÖµ */
+    T_unit_values_list  tMaybeValueList;            /* è®°å½•å¯èƒ½çš„æ•°å€¼, åº”åœ¨unitçŠ¶æ€ä¸º1æ—¶æœ‰æ•ˆ */
+    BYTE                bInitFlag;                  /* æ˜¯å¦æ˜¯é¢„è®¾æ•°å€¼ */
 }T_unit;
 
 typedef struct tagT_map
@@ -86,9 +86,9 @@ int     g_iCnt = 0;
 
 BYTE calc_map(T_map* ptMap);
 
-/* ´òÓ¡º¯Êı                         */
-/* bFuncFlag:   0 -- °´×Ö·û´®´òÓ¡   */
-/*              1 -- °´9*9¸ñÊ½´òÓ¡  */
+/* æ‰“å°å‡½æ•°                         */
+/* bFuncFlag:   0 -- æŒ‰å­—ç¬¦ä¸²æ‰“å°   */
+/*              1 -- æŒ‰9*9æ ¼å¼æ‰“å°  */
 void print_map(T_map* ptMap, BYTE bFuncFlag)
 {
     BYTE    i,j,k;
@@ -163,7 +163,7 @@ BYTE init_map(T_map* ptMap, const char* szChar)
     BYTE    bDoFlag = 1 ;
     memset(ptMap, 0x0, sizeof(T_map));
     
-    /*  ÕâÀïÈçºÎ·ÀÖ¹ÄÚ´æÔ½½ç? */
+    /*  è¿™é‡Œå¦‚ä½•é˜²æ­¢å†…å­˜è¶Šç•Œ? */
     memcpy(szCharTemp, szChar, sizeof(szCharTemp));
 
     for(i = 0; i < MAP_SIZE && 1 == bDoFlag; i++)
@@ -248,7 +248,7 @@ BYTE init_map(T_map* ptMap, const char* szChar)
     return PROC_SUCCSS;
 }
 
-/* ´ÓptListÖĞÉ¾³ıbValue(Ä¬ÈÏlistÖĞÖ»»áÓĞÒ»¸öbValue) */
+/* ä»ptListä¸­åˆ é™¤bValue(é»˜è®¤listä¸­åªä¼šæœ‰ä¸€ä¸ªbValue) */
 BYTE  del_value_from_list(BYTE bValue, T_unit_values_list* ptList)
 {
     BYTE        i,j ;
@@ -274,13 +274,13 @@ BYTE  del_value_from_list(BYTE bValue, T_unit_values_list* ptList)
             return PROC_SUCCSS;
         }
 
-        /* °ÑºóÃæµÄÖµÍùÇ°ÒÆ */
+        /* æŠŠåé¢çš„å€¼å¾€å‰ç§» */
         for(j = i; j < (ptList->bCnt -1) && j < (CNT_OF_VALUE_LIST - 1); j++)
         {
             ptList->abValues[j] = ptList->abValues[j+1];
         }
 
-        /* É¾³ı×îºóÒ»¸öÖµ */
+        /* åˆ é™¤æœ€åä¸€ä¸ªå€¼ */
         ptList->abValues[ptList->bCnt -1] = 0;
         ptList->bCnt--;
 
@@ -312,20 +312,20 @@ BYTE calc_sig_unit(T_map* ptMap, BYTE x, BYTE y)
     //printf("=========== Now calc unit(%d,%d) ===========\n", x,y);
     //print_map(ptMap, 1);
 
-    /* ¼ÆËã±¾unitËùÔÚ3*3¾Å¹¬¸ñµÄÆğÊ¼×ø±ê */
+    /* è®¡ç®—æœ¬unitæ‰€åœ¨3*3ä¹å®«æ ¼çš„èµ·å§‹åæ ‡ */
     bMinX = (x/MAP_SUB_SIZE)*MAP_SUB_SIZE;
     bMaxX = (x/MAP_SUB_SIZE)*MAP_SUB_SIZE + MAP_SUB_SIZE;
     bMinY = (y/MAP_SUB_SIZE)*MAP_SUB_SIZE;
     bMaxY = (y/MAP_SUB_SIZE)*MAP_SUB_SIZE + MAP_SUB_SIZE;
 
-    /* step1. µ¥ÔªÈç¹û²»ÊÇ¼ÆËãÌ¬,×ªÎª¼ÆËãÌ¬ */
+    /* step1. å•å…ƒå¦‚æœä¸æ˜¯è®¡ç®—æ€,è½¬ä¸ºè®¡ç®—æ€ */
     if(UNIT_STATUS_INIT == ptUnit->bUnitSatus)
     {
         bOldStatus         = ptUnit->bUnitSatus;
         
         ptUnit->bUnitSatus = UNIT_STATUS_CALCING;
 
-        /* ¿ªÊ¼ËùÓĞÖµ¶¼ÓĞ¿ÉÄÜ */
+        /* å¼€å§‹æ‰€æœ‰å€¼éƒ½æœ‰å¯èƒ½ */
         ptUnit->tMaybeValueList.bCnt = CNT_OF_VALUE_LIST;
         for(i = 0; i < CNT_OF_VALUE_LIST; i++)
         {
@@ -333,12 +333,12 @@ BYTE calc_sig_unit(T_map* ptMap, BYTE x, BYTE y)
         }
     }
     
-    /* step2. ±éÀúËùÔÚĞĞ,ÅÅ³ı·Ç·¨Öµ */
+    /* step2. éå†æ‰€åœ¨è¡Œ,æ’é™¤éæ³•å€¼ */
     if(UNIT_STATUS_CALCING == ptUnit->bUnitSatus)
     {
         for(i = 0; i < MAP_SIZE; i++)
         {
-            /* Ìø¹ı×Ô¼º */
+            /* è·³è¿‡è‡ªå·± */
             if( i == x )
             {
                 continue;
@@ -362,12 +362,12 @@ BYTE calc_sig_unit(T_map* ptMap, BYTE x, BYTE y)
         }
     }
 
-    /* step3. ±éÀúËùÔÚÁĞ,ÅÅ³ı·Ç·¨Öµ */
+    /* step3. éå†æ‰€åœ¨åˆ—,æ’é™¤éæ³•å€¼ */
     if(UNIT_STATUS_CALCING == ptUnit->bUnitSatus)
     {
         for(i = 0; i < MAP_SIZE; i++)
         {
-            /* Ìø¹ı×Ô¼º */
+            /* è·³è¿‡è‡ªå·± */
             if( i == y )
             {
                 continue;
@@ -391,14 +391,14 @@ BYTE calc_sig_unit(T_map* ptMap, BYTE x, BYTE y)
         }
     }
 
-    /* step4. ±éÀúËùÔÚ3*3µÄÇøÓò,ÅÅ³ı·Ç·¨Öµ */
+    /* step4. éå†æ‰€åœ¨3*3çš„åŒºåŸŸ,æ’é™¤éæ³•å€¼ */
     if(UNIT_STATUS_CALCING == ptUnit->bUnitSatus)
     {
         for(i = bMinY; i < bMaxY; i++)
         {
             for(j = bMinX; j < bMaxX; j++)
             {
-                /* Ìø¹ı×Ô¼º */
+                /* è·³è¿‡è‡ªå·± */
                 if(j == x && i == y)
                 {
                     continue;
@@ -423,11 +423,11 @@ BYTE calc_sig_unit(T_map* ptMap, BYTE x, BYTE y)
         }
     }
 
-    /* step5. ×¢Òâ:¿ªÊ¼µİ¹é!!!!                                                                      */
-    /*        Èç¹û±¾µ¥ÔªÈç¹ûÊÇÈ·ÈÏÌ¬, ÔòÖØĞÂÔÚ¼ÆËãÒ»´Î±¾µ¥ÔªÏà¹ØÇøÓòÆäËû¼ÆËãÖĞµ¥ÔªµÄÖµ               */
+    /* step5. æ³¨æ„:å¼€å§‹é€’å½’!!!!                                                                      */
+    /*        å¦‚æœæœ¬å•å…ƒå¦‚æœæ˜¯ç¡®è®¤æ€, åˆ™é‡æ–°åœ¨è®¡ç®—ä¸€æ¬¡æœ¬å•å…ƒç›¸å…³åŒºåŸŸå…¶ä»–è®¡ç®—ä¸­å•å…ƒçš„å€¼               */
     if(UNIT_STATUS_CONFIRMED == ptUnit->bUnitSatus)
     {
-        /* ±éÀúĞĞ */
+        /* éå†è¡Œ */
         for(i = 0; i < MAP_SIZE; i++)
         {
             if(UNIT_STATUS_CALCING == ptMap->tUnit[x][i].bUnitSatus)
@@ -441,7 +441,7 @@ BYTE calc_sig_unit(T_map* ptMap, BYTE x, BYTE y)
             }
         }
         
-        /* ±éÀúÁĞ */
+        /* éå†åˆ— */
         for(i = 0; i < MAP_SIZE; i++)
         {
             if(UNIT_STATUS_CALCING == ptMap->tUnit[i][y].bUnitSatus)
@@ -455,7 +455,7 @@ BYTE calc_sig_unit(T_map* ptMap, BYTE x, BYTE y)
             }        
         }
 
-        /* ±éÀúËùÔÚ×ÓÇøÓò */
+        /* éå†æ‰€åœ¨å­åŒºåŸŸ */
         for(i = bMinY; i < bMaxY; i++)
         {
             for(j = bMinX; j < bMaxX; j++)
@@ -472,7 +472,7 @@ BYTE calc_sig_unit(T_map* ptMap, BYTE x, BYTE y)
             }
         }        
 
-    /* µİ¹éÈ«²¿½áÊø */        
+    /* é€’å½’å…¨éƒ¨ç»“æŸ */        
     }
 
     g_iCnt++;
@@ -520,12 +520,12 @@ BYTE is_map_calc_succ(T_map* ptMap)
     return PROC_FAIL_COMM;
 }
 
-/* ¼ÆËãÒ»¸ö¾Å¹¬¸ñÀïÃ¿¸öÊı×ÖµÄ¿ÉÄÜ³öÏÖ´ÎÊı,Èç¹ûÓĞÊı×Ö¿ÉÄÜ³öÏÖ´ÎÊıÎª1,ÔòÈ·¶¨ÆäËùÔÚµ¥Ôª */
-/* x,y:¾Å¹¬¸ñµÄÆğÊ¼×ø±ê                                                              */
+/* è®¡ç®—ä¸€ä¸ªä¹å®«æ ¼é‡Œæ¯ä¸ªæ•°å­—çš„å¯èƒ½å‡ºç°æ¬¡æ•°,å¦‚æœæœ‰æ•°å­—å¯èƒ½å‡ºç°æ¬¡æ•°ä¸º1,åˆ™ç¡®å®šå…¶æ‰€åœ¨å•å…ƒ */
+/* x,y:ä¹å®«æ ¼çš„èµ·å§‹åæ ‡                                                              */
 BYTE calc_sub_map(T_map* ptMap, BYTE x, BYTE y)
 {
     BYTE        i,j,k;
-    /* bCnt[1]¼ÇÂ¼1ÔÚÄ³¸öÇøÓòÄÚ³öÏÖµÄ´ÎÊı,ÆäËûÊı×ÖÀàÍÆ. bCnt[0]²»Ê¹ÓÃ */
+    /* bCnt[1]è®°å½•1åœ¨æŸä¸ªåŒºåŸŸå†…å‡ºç°çš„æ¬¡æ•°,å…¶ä»–æ•°å­—ç±»æ¨. bCnt[0]ä¸ä½¿ç”¨ */
     BYTE    abValueCnt[10] = {0};
     BYTE    bValue;
     
@@ -556,7 +556,7 @@ BYTE calc_sub_map(T_map* ptMap, BYTE x, BYTE y)
         }
     }
 
-    /* Èç¹ûÓĞÖµ³öÏÖµÄ´ÎÊıÎª1,Ôò½«ÕÒµ½¸ÃÖµËùÔÚµ¥Ôª,ĞŞ¸Äµ¥ÔªµÄÖµ */
+    /* å¦‚æœæœ‰å€¼å‡ºç°çš„æ¬¡æ•°ä¸º1,åˆ™å°†æ‰¾åˆ°è¯¥å€¼æ‰€åœ¨å•å…ƒ,ä¿®æ”¹å•å…ƒçš„å€¼ */
     for(bValue = 1; bValue < 10; bValue++ )
     {
         if(1 != abValueCnt[bValue])
@@ -581,7 +581,7 @@ BYTE calc_sub_map(T_map* ptMap, BYTE x, BYTE y)
                             ptMap->tUnit[i][j].bValue = bValue;
                             ptMap->tUnit[i][j].bUnitSatus = UNIT_STATUS_CONFIRMED;
 
-                            /* ÔÙ´Î¼ÆËãÏà¹Øµ¥Ôª */
+                            /* å†æ¬¡è®¡ç®—ç›¸å…³å•å…ƒ */
                             calc_sig_unit(ptMap, i, j);
                         }
                     }
@@ -594,7 +594,7 @@ BYTE calc_sub_map(T_map* ptMap, BYTE x, BYTE y)
 }
 
 
-/* ¸ù¾İÃ¿¸öµ¥ÔªµÄ¿ÉÄÜÖµ,¼ÙÉè¿ÉÄÜÖµÊÇºÏ·¨,Ôò³¢ÊÔ¼ÆËãÆäËûµ¥ÔªµÄÖµ */
+/* æ ¹æ®æ¯ä¸ªå•å…ƒçš„å¯èƒ½å€¼,å‡è®¾å¯èƒ½å€¼æ˜¯åˆæ³•,åˆ™å°è¯•è®¡ç®—å…¶ä»–å•å…ƒçš„å€¼ */
 BYTE  guess_map(T_map* ptMap)
 {
     BYTE    x,y,i;
@@ -640,12 +640,12 @@ BYTE  guess_map(T_map* ptMap)
     return PROC_FAIL_COMM;
 }
 
-/* °´ÇøÓò(ĞĞ/ÁĞ/¾Å¹¬¸ñ)À´Í³¼Æ¿ÉÄÜÖµµÄ³öÏÖ´ÎÊı,Èç¹û¿ÉÄÜÖµ³öÏÖ´ÎÊıÎª1,Ôò¿ÉÈ·¶¨¸ÃÖµµÄÎ»ÖÃ */
+/* æŒ‰åŒºåŸŸ(è¡Œ/åˆ—/ä¹å®«æ ¼)æ¥ç»Ÿè®¡å¯èƒ½å€¼çš„å‡ºç°æ¬¡æ•°,å¦‚æœå¯èƒ½å€¼å‡ºç°æ¬¡æ•°ä¸º1,åˆ™å¯ç¡®å®šè¯¥å€¼çš„ä½ç½® */
 BYTE calc_map_by_area(T_map* ptMap)
 {
     BYTE    x,y,i,j ;
     BYTE    bValue;
-    /* bCnt[1]¼ÇÂ¼1ÔÚÄ³¸öÇøÓòÄÚ³öÏÖµÄ´ÎÊı,ÆäËûÊı×ÖÀàÍÆ. bCnt[0]²»Ê¹ÓÃ */
+    /* bCnt[1]è®°å½•1åœ¨æŸä¸ªåŒºåŸŸå†…å‡ºç°çš„æ¬¡æ•°,å…¶ä»–æ•°å­—ç±»æ¨. bCnt[0]ä¸ä½¿ç”¨ */
     BYTE    abValueCnt[10] = {0};
 
     if(NULL == ptMap)
@@ -653,12 +653,12 @@ BYTE calc_map_by_area(T_map* ptMap)
         return PROC_FAIL_COMM;
     }
 
-    /* step1. ÖğĞĞ¼ÆËã */
+    /* step1. é€è¡Œè®¡ç®— */
     for(x = 0; x < MAP_SIZE; x++)
     {
         memset(abValueCnt, 0, sizeof(abValueCnt));
 
-        /* ¼ÆËãÃ¿¸öÖµµÄ³öÏÖ´ÎÊı */
+        /* è®¡ç®—æ¯ä¸ªå€¼çš„å‡ºç°æ¬¡æ•° */
         for(y = 0; y < MAP_SIZE; y++)
         {
             if(UNIT_STATUS_CONFIRMED == ptMap->tUnit[x][y].bUnitSatus)
@@ -678,7 +678,7 @@ BYTE calc_map_by_area(T_map* ptMap)
             }
         }
 
-        /* Èç¹ûÓĞÖµ³öÏÖµÄ´ÎÊıÎª1,Ôò½«ÕÒµ½¸ÃÖµËùÔÚµ¥Ôª,ĞŞ¸Äµ¥ÔªµÄÖµ */
+        /* å¦‚æœæœ‰å€¼å‡ºç°çš„æ¬¡æ•°ä¸º1,åˆ™å°†æ‰¾åˆ°è¯¥å€¼æ‰€åœ¨å•å…ƒ,ä¿®æ”¹å•å…ƒçš„å€¼ */
         for(i = 1; i < 10; i++ )
         {
             if(1 != abValueCnt[i])
@@ -701,7 +701,7 @@ BYTE calc_map_by_area(T_map* ptMap)
                             ptMap->tUnit[x][y].bValue = i;
                             ptMap->tUnit[x][y].bUnitSatus = UNIT_STATUS_CONFIRMED;
 
-                            /* ÔÙ´Î¼ÆËãÏà¹Øµ¥Ôª */
+                            /* å†æ¬¡è®¡ç®—ç›¸å…³å•å…ƒ */
                             calc_sig_unit(ptMap, x, y);
                         }
                     }
@@ -711,12 +711,12 @@ BYTE calc_map_by_area(T_map* ptMap)
         }
     }
 
-    /* step2. ÖğÁĞ¼ÆËã  */
+    /* step2. é€åˆ—è®¡ç®—  */
     for(y = 0; y < MAP_SIZE; y++)
     {
         memset(abValueCnt, 0, sizeof(abValueCnt));
 
-        /* ¼ÆËãÃ¿¸öÖµµÄ³öÏÖ´ÎÊı */
+        /* è®¡ç®—æ¯ä¸ªå€¼çš„å‡ºç°æ¬¡æ•° */
         for(x = 0; x < MAP_SIZE; x++)
         {
             if(UNIT_STATUS_CONFIRMED == ptMap->tUnit[x][y].bUnitSatus)
@@ -736,7 +736,7 @@ BYTE calc_map_by_area(T_map* ptMap)
             }
         }
 
-        /* Èç¹ûÓĞÖµ³öÏÖµÄ´ÎÊıÎª1,Ôò½«ÕÒµ½¸ÃÖµËùÔÚµ¥Ôª,ĞŞ¸Äµ¥ÔªµÄÖµ */
+        /* å¦‚æœæœ‰å€¼å‡ºç°çš„æ¬¡æ•°ä¸º1,åˆ™å°†æ‰¾åˆ°è¯¥å€¼æ‰€åœ¨å•å…ƒ,ä¿®æ”¹å•å…ƒçš„å€¼ */
         for(i = 1; i < 10; i++ )
         {
             if(1 != abValueCnt[i])
@@ -759,7 +759,7 @@ BYTE calc_map_by_area(T_map* ptMap)
                             ptMap->tUnit[x][y].bValue = i;
                             ptMap->tUnit[x][y].bUnitSatus = UNIT_STATUS_CONFIRMED;
 
-                            /* ÔÙ´Î¼ÆËãÏà¹Øµ¥Ôª */
+                            /* å†æ¬¡è®¡ç®—ç›¸å…³å•å…ƒ */
                             calc_sig_unit(ptMap, x, y);
                         }
                     }
@@ -768,7 +768,7 @@ BYTE calc_map_by_area(T_map* ptMap)
         }
     }
 
-    /* step3. Öğ¸ö¾Å¹¬¸ñ¼ÆËã */
+    /* step3. é€ä¸ªä¹å®«æ ¼è®¡ç®— */
     for(x = 0; x < MAP_SIZE; x = x+3)
     {
         for(y = 0; y < MAP_SIZE; y = y+3)
@@ -790,10 +790,10 @@ BYTE calc_map(T_map* ptMap)
         return PROC_FAIL_COMM;
     }
     
-    /* step1. map×ªÎª¼ÆËãÌ¬ */
+    /* step1. mapè½¬ä¸ºè®¡ç®—æ€ */
     ptMap->bMapStatus = MAP_STATUS_UNIT_CALCING;
 
-    /* step2. Öğ¸ö¼ÆËãunit×´Ì¬ */
+    /* step2. é€ä¸ªè®¡ç®—unitçŠ¶æ€ */
     for(y = 0; y < MAP_SIZE; y++)
     {
         for(x = 0; x < MAP_SIZE; x++)
@@ -812,21 +812,21 @@ BYTE calc_map(T_map* ptMap)
         }
     }
 
-    /* step3: µ¥Ôª³õ´Î¼ÆËãÍêºó,¿ÉÄÜÓĞ¶à¸ö¿ÉÄÜÇé¿öµ¼ÖÂÈÔÈ»ÓĞµ¥Ôª´¦ÓÚ¼ÆËãÌ¬, Èç¹ûÓĞÔò¿ªÊ¼³¢ÊÔÍ³³ï´¦Àí */
+    /* step3: å•å…ƒåˆæ¬¡è®¡ç®—å®Œå,å¯èƒ½æœ‰å¤šä¸ªå¯èƒ½æƒ…å†µå¯¼è‡´ä»ç„¶æœ‰å•å…ƒå¤„äºè®¡ç®—æ€, å¦‚æœæœ‰åˆ™å¼€å§‹å°è¯•ç»Ÿç­¹å¤„ç† */
     if(PROC_SUCCSS != is_map_calc_succ(ptMap))
     {
         ptMap->bMapStatus = MAP_STATUS_UNIT_RECALING;
         calc_map_by_area(ptMap);
     }
 
-    /* step4, Ã»¸üºÃµÄ°ì·¨ÁË,¿ªÊ¼²Â */
+    /* step4, æ²¡æ›´å¥½çš„åŠæ³•äº†,å¼€å§‹çŒœ */
     if(PROC_SUCCSS != is_map_calc_succ(ptMap))
     {
         ptMap->bMapStatus = MAP_STATUS_GUESSING;
         guess_map(ptMap);
     }
 
-    /* step5: ÅĞ¶ÏÊÇ·ñ´¦ÀíÍê³É */
+    /* step5: åˆ¤æ–­æ˜¯å¦å¤„ç†å®Œæˆ */
     if(PROC_SUCCSS == is_map_calc_succ(ptMap))
     {
         ptMap->bMapStatus = MAP_STATUS_ALL_FINISH;
@@ -916,8 +916,6 @@ void print_usage()
     T_map tMap;
     
     printf("for example: u can use this string(%s) to create a example sudoku table. \r\n", E1);
-    
-    init_map(&tMap, E1);
     
     return;
 }
