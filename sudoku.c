@@ -248,6 +248,16 @@ BYTE init_map(T_map* ptMap, const char* szChar)
     return PROC_SUCCSS;
 }
 
+BYTE map_calc_succ_proc(T_map* ptMap)
+{
+    printf("Congratulations! Map calc finish! Use %d steps.\n", g_iCnt);
+
+    printf("====================== final result ======================\n");
+    print_map(ptMap, 1);
+
+    return PROC_SUCCSS;
+}
+
 /* 从ptList中删除bValue(默认list中只会有一个bValue) */
 BYTE  del_value_from_list(BYTE bValue, T_unit_values_list* ptList)
 {
@@ -813,27 +823,25 @@ BYTE calc_map(T_map* ptMap)
     }
 
     /* step3: 单元初次计算完后,可能有多个可能情况导致仍然有单元处于计算态, 如果有则开始尝试统筹处理 */
-    if(PROC_SUCCSS != is_map_calc_succ(ptMap))
+    if(PROC_SUCCSS == is_map_calc_succ(ptMap))
     {
-        ptMap->bMapStatus = MAP_STATUS_UNIT_RECALING;
-        calc_map_by_area(ptMap);
+        return map_calc_succ_proc(ptMap);
     }
-
+    ptMap->bMapStatus = MAP_STATUS_UNIT_RECALING;
+    calc_map_by_area(ptMap);
+    
     /* step4, 没更好的办法了,开始猜 */
-    if(PROC_SUCCSS != is_map_calc_succ(ptMap))
+    if(PROC_SUCCSS == is_map_calc_succ(ptMap))
     {
-        ptMap->bMapStatus = MAP_STATUS_GUESSING;
-        guess_map(ptMap);
+        return map_calc_succ_proc(ptMap);
     }
-
+    ptMap->bMapStatus = MAP_STATUS_GUESSING;
+    guess_map(ptMap);
+    
     /* step5: 判断是否处理完成 */
     if(PROC_SUCCSS == is_map_calc_succ(ptMap))
     {
-        ptMap->bMapStatus = MAP_STATUS_ALL_FINISH;
-        printf("Congratulations! Map calc finish! Use %d steps.\n", g_iCnt);
-
-        printf("====================== final result ======================\n");
-        print_map(ptMap, 1);
+        ;//guess_map func already print the result.
     }
     else
     {
@@ -841,74 +849,6 @@ BYTE calc_map(T_map* ptMap)
     }
     
     return PROC_SUCCSS;
-}
-
-void test_print_map()
-{
-    T_map   tMap;
-
-    memset(&tMap, 0x0, sizeof(tMap));
-
-    tMap.tUnit[0][2].bUnitSatus = UNIT_STATUS_CONFIRMED;
-    tMap.tUnit[0][2].bValue     = 9;
-
-    tMap.tUnit[0][1].bUnitSatus = UNIT_STATUS_CALCING;
-    tMap.tUnit[0][1].tMaybeValueList.bCnt = 2;
-    tMap.tUnit[0][1].tMaybeValueList.abValues[0] = 3;
-    tMap.tUnit[0][1].tMaybeValueList.abValues[1] = 9;
-
-    print_map(&tMap, 1);
-}
-
-void test_init_map()
-{
-    T_map   tMap;
-
-    memset(&tMap, 0x0, sizeof(tMap));
-
-    init_map(&tMap, "123456789..3.8....123456789");
-
-    print_map(&tMap, 1);
-}
-
-void test_del_value_from_list()
-{
-    T_unit_values_list          tList;
-    BYTE                        i;
-    
-    tList.bCnt          =  3;
-    
-    tList.abValues[0]   =  2;
-    tList.abValues[1]   =  3;
-    tList.abValues[2]   =  9;
-
-    for(i = 0; i < tList.bCnt; i++)
-    {
-        printf("%d", tList.abValues[i]);
-    }
-
-    PRINT_LINE;
-    
-    del_value_from_list(2, &tList);
-
-    for(i = 0; i < tList.bCnt; i++)
-    {
-        printf("%d", tList.abValues[i]);
-    }
-
-    return ;
-    
-}
-
-void test_main()
-{
-    T_map tMap;
-
-    init_map(&tMap, V4);
-
-    calc_map(&tMap);
-    
-    return ;
 }
 
 void print_usage()
@@ -919,7 +859,6 @@ void print_usage()
     
     return;
 }
-
 
 void calc_input()
 {
@@ -944,6 +883,7 @@ void calc_input()
 
     return ;
 }
+
 int main()
 {
     calc_input();
