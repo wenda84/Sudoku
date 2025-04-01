@@ -3,7 +3,7 @@
 
 **How to Build**
 ```
-  gcc sudoku.c -o run
+gcc sudoku.c -o run
 ```
 
 **Usage**
